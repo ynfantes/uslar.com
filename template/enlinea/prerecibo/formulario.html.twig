@@ -1,0 +1,116 @@
+{% extends 'layout/fluid.html.twig' %}
+{# TITULO #}
+{% block titulo accion|title ~ ' Autorización Pre-Recibo Facturación' %}
+
+{# JAVASCRIPT #}
+{% block head %}
+{{ parent() }}
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".autorizar").live('click',function() {
+            $(".label-info").html($(this).closest("tr").find("td:first").text());
+            $("a.btn-primary").attr("href",$("a.btn-primary").attr("href") + $(this).closest("tr").find("td:last").text());
+            $("#myModal").modal('toggle');
+        });
+    });
+    </script>
+{% endblock %}
+
+{# CONTENIDO #}
+{% block contenido %}
+
+    {% block sidebar %}
+        {{ parent() }}
+    {% endblock %}
+<div class="span9">
+    <div class="page-header hidden-phone">
+        <h1>{{ accion|title }} Autorización Pre-Recibo</h1>
+    </div>
+    <ul class="breadcrumb">
+        <li><a href="{{constant('URL_SISTEMA')}}">{{ constant("NOMBRE_APLICACION")}}</a><span class="divider">&raquo;</span></li>
+        <li>{{ accion|title }} Autorización Pre-Recibo</li>
+
+    </ul>
+    {% if resultado is defined %}
+    {% include 'misc/resultado.html.twig' %}
+{% endif %}  
+    <div style="min-height: 300px">    
+        <div class="accordion" id="accordion2">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                        Listado de Pre-recibos publicados
+                        </a>
+                    </div>
+                 <div id="collapseOne" class="accordion-body collapse in">
+                    <div class="accordion-inner">
+                        <table  class="table table-bordered table-striped responsive-utilities">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center">Período<small>Facturación</small></th>
+                                    <th style="text-align: center">Documento<small>Nombre</small></th>
+                                    <th style="text-align: center">Autorizado <small>Por</small></th>
+                                    <th style="text-align: center">Fecha <small>Autorización</small></th>
+                                    <th style="text-align: center">Funciones<small>Especiales</small></th>
+                                    <th class="hidden">id</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if prerecibos is empty %}
+                                    <tr><td colspan="5"><div class="alert alert-error">
+                                            <strong>Atención!</strong> No se puede cargar esta información.</div></td></tr>
+                                {% else %}
+                                    {% for detalle in prerecibos.data %}
+                                        <tr>
+                                            <td>{{ detalle.periodo | date("m-Y") }}</td>
+                                            <td>{{ detalle.documento }}</td>
+                                            <td>{{ detalle.aprobado_por }}</td>
+                                            <td>{{ detalle.fecha_aprobado | date("d/m/Y") }}</td>
+                                            <td>
+                                                    <div class="btn-toolbar">
+                                                        <div class="btn-group">
+                                                            {% if detalle.aprobado==0 %}
+                                                                <a class="btn autorizar" href="#" title="autorizar" data-toggle="modal"><i class="icon-ok"></i></a>
+                                                            {% else %}
+                                                                <a class="btn disabled" href="#" title="autorizar" data-toggle="modal"><i class="icon-ok"></i></a>
+                                                            {% endif %}
+                                                            {% if detalle.soporte!="" %}
+                                                                <a class="btn" href="{{constant('URL_SISTEMA')}}/prerecibo/ver/{{ detalle.soporte }}" title="Soportes" data-toggle="modal"><i class="icon-folder-open"></i></a>    
+                                                            {% else %}
+                                                                <a class="btn disabled" href="#" title="Soportes" data-toggle="modal"><i class="icon-folder-open"></i></a>    
+                                                            {% endif %}
+                                                            {% if detalle.publicado %}
+                                                                <a class="btn" href="{{constant('URL_SISTEMA')}}/prerecibo/ver/{{ detalle.documento }}" title="ver"><i class="icon-eye-open"></i></a>
+                                                            {% else %}
+                                                                <a class="btn disabled" href="{{constant('URL_SISTEMA')}}/prerecibo/ver/{{ detalle.documento }}" title="ver"><i class="icon-eye-open"></i></a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                            </td>
+                                            <td class="hidden">{{ detalle.id }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+            </div>
+                <div id="myModal" class="modal hide fade">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Confirmar autorización</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>Esta a punto de autorizar la factuación de período: <span class="label label-info">Info</span></p>
+                   <p>Presione el botón Autorizar para confirmar la operación.</p>
+                    </div>
+                    <div class="modal-footer">
+                    <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</a>
+                    <a href="{{constant('URL_SISTEMA')}}/prerecibo/autorizar/" class="btn btn-primary">Autorizar</a>
+                    </div>
+                </div>
+        </div>
+    </div>
+{% endblock %}

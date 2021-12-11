@@ -1,0 +1,22 @@
+{# Barra de Navegacion #}
+   <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          {% if session.usuario.id is not defined %}
+          <a class="brand" href="{{ constant("ROOT") }}enlinea">Intranet Halcón</a>
+          {% endif %}
+          {% if session.usuario.id is defined %}
+            <div class="pull-right">
+                <span class="navbar-text"> <span class="hidden-phone">Bienvenido(a)</span> <a href="{{ constant('URL_SISTEMA')}}/propietario/actualizar"><i class="icon-white icon-user"></i> {{ session.usuario.nombre }}</a></span>
+                | <span class="navbar-text"><a href="{{ constant("URL_INTRANET") }}/caja/salir"><i class="icon-white icon-off"></i> Cerrar Sesion</a></span>
+            </div>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+

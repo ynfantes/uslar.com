@@ -1,0 +1,117 @@
+<div class="sidebar responsive sidebar-fixed" id="sidebar">
+<script type="text/javascript">
+try {
+ace.settings.check('sidebar', 'fixed')
+} catch (e) {
+}
+</script>
+<!-- /.sidebar-shortcuts -->
+<div style="position: relative;"><div class="nav-wrap"><div style="position: relative; top: 0px; transition-property: top; transition-duration: 0.2s;">
+<ul class="nav nav-list">
+<li>
+<a href="{{ constant("URL_SISTEMA")}}">
+    <i class="menu-icon fa fa-tachometer"></i>
+    <span class="menu-text"> Cartelera </span>
+</a>
+<b class="arrow"></b>
+</li>
+<li class="hsub">
+<a class="dropdown-toggle" href="#">
+<i class="menu-icon fa fa-user"></i>
+<span class="menu-text"> Propietario </span>
+
+<b class="arrow fa fa-angle-down"></b>
+</a>
+
+<b class="arrow"></b>
+
+<ul class="submenu">
+<li class="">
+<a href="{{ constant("URL_SISTEMA")}}/propietario/actualizar">
+<i class="menu-icon fa fa-caret-right"></i>
+Datos Personales
+</a>
+
+<b class="arrow"></b>
+</li>
+
+<li class="">
+<a href="{{ constant("URL_SISTEMA")}}/propietario/actualizar/clave">
+<i class="menu-icon fa fa-caret-right"></i>
+Cambiar Contraseña
+</a>
+
+<b class="arrow"></b>
+</li>
+</ul>
+</li>
+
+<li class="hsub">
+<a href="{{ constant("URL_SISTEMA")}}/inmueble/junta-condominio">
+<i class="menu-icon fa fa-users"></i>
+<span class="menu-text"> Junta de Condominio </span>
+</a>
+</li>
+
+<li class="hsub">
+<a href="{{ constant("URL_SISTEMA")}}/cuenta">
+<i class="menu-icon fa fa-list"></i>
+<span class="menu-text"> Estado de Cuenta </span>
+</a>
+
+<b class="arrow"></b>
+
+</li>
+
+<li class="hsub">
+<a href="{{ constant("URL_SISTEMA")}}/pago/registrar">
+<i class="menu-icon fa fa-money"></i>
+<span class="menu-text"> Pago de Condominio </span>
+</a>
+<b class="arrow"></b>
+</li>
+
+<li class="">
+<a href="{{ constant("URL_SISTEMA")}}/pago/ver">
+<i class="menu-icon fa fa-print"></i>
+<span class="menu-text"> Cancelación de Gastos </span>
+</a>
+
+<b class="arrow"></b>
+</li>
+<li class="hsub">
+<a href="{{constant("URL_SISTEMA")}}/inmueble/listarCuentasDeFondo">
+<i class="menu-icon fa fa-calendar"></i>
+<span class="menu-text"> Cuentas de Fondo </span>
+</a>
+<b class="arrow"></b>
+</li>
+{% if session.junta != '' %}
+<li class="">
+<a href="{{constant("URL_SISTEMA")}}/inmueble/cuenta">
+<i class="menu-icon fa fa-bar-chart-o"></i>
+<span class="menu-text"> Edo. de Cuenta Inmueble </span>
+</a>
+
+<b class="arrow"></b>
+</li>
+{% endif %}
+<li class="">
+<a href="{{ constant("URL_SISTEMA")}}/propietario?logout=true">
+<i class="menu-icon fa fa-power-off"></i>
+<span class="menu-text"> Cerrar sesión </span>
+</a>
+    </li>
+</ul></div></div><div class="ace-scroll nav-scroll"><div class="scroll-track" style="display: none;"><div class="scroll-bar" style="top: 0px; transition-property: top; transition-duration: 0.13s;"></div></div><div class="scroll-content" style=""><div></div></div></div></div><!-- /.nav-list -->
+
+<div id="sidebar-collapse" class="sidebar-toggle sidebar-collapse" style="z-index: 1;">
+<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
+</div>
+
+<script type="text/javascript">
+try {
+ace.settings.check('sidebar', 'collapsed')
+} catch (e) {
+}
+</script>
+</div>

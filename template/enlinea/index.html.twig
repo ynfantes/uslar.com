@@ -1,0 +1,156 @@
+{# indice #}
+{% extends 'layout/fluid.html.twig'%}
+{% block head %}
+{{ parent() }}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("ul.nav-list li").eq(0).addClass("active");
+});
+var graf_facturacion = {{GRAFICO_FACTURACION}}
+var graf_cobranza = {{GRAFICO_COBRANZA}}
+
+if (graf_facturacion == 1 || graf_cobranza == 1) {
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+    var data_facturacion = $.ajax({
+    url: "{{ constant("URL_SISTEMA")}}/inmueble/facturacion",
+    dataType:"json",
+    async: false
+    }).responseText;
+
+    // Create our data table out of JSON data loaded from server.
+    var data = new google.visualization.DataTable(data_facturacion);
+
+    var options = {
+    legend: "none",
+    height: 200,
+    vAxis: {title: 'Miles de Bolívares'},
+    hAxis: {title: "Últimos períodos facturados"},
+    colors: ['#d15b47', '#d15b47', '#ec8f6e', '#f3b49f', '#f6c7b6'],
+    bar: {groupWidth: "95%"}
+    };
+
+    var options1 = {
+    legend: "none",
+    height: 200,
+    vAxis: {title: 'Miles de Bolívares'},
+    hAxis: {title: "Cobranza Últimos meses"},
+    colors: ['#fee074', '#fee074', '#ec8f6e', '#f3b49f', '#f6c7b6'],
+    bar: {groupWidth: "95%"}
+    };
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('sales-charts'));
+    chart.draw(data, options);
+
+    var data_cobranza = $.ajax({
+    url: "{{ constant("URL_SISTEMA")}}/inmueble/cobranza",
+    dataType:"json",
+    async: false
+    }).responseText;
+
+    var cobra = new google.visualization.DataTable(data_cobranza);
+
+    var chart1 = new google.visualization.ColumnChart(document.getElementById('cobranza-charts'));
+    chart1.draw(cobra, options1);
+
+    }
+}
+</script>
+
+{% endblock %}
+{% block titulo 'Administradora de Condominio'%}
+{% block contenido %}
+<div id="breadcrumbs" class="breadcrumbs breadcrumbs-fixed">
+<script type="text/javascript">
+try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+</script>
+<ul class="breadcrumb">
+<li>
+<i class="ace-icon fa fa-home home-icon"></i>
+<a href="{{constant('URL_SISTEMA')}}">{{ constant("NOMBRE_APLICACION")}}</a>
+</li>
+<li class="active">Inicio</li>
+</ul><!-- /.breadcrumb -->
+<div id="nav-search" class="nav-search">
+<form class="form-search">
+<span class="input-icon">
+<input type="text" autocomplete="off" id="nav-search-input" class="nav-search-input" placeholder="Buscar ...">
+<i class="ace-icon fa fa-search nav-search-icon"></i>
+</span>
+</form>
+</div><!-- /.nav-search -->
+</div>
+<div class="page-content">
+    <div class="page-content-area">
+    <div class="page-header hidden-phone">
+        <h1>Bienvenido
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                Cartelera
+            </small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+<!-- PAGE CONTENT BEGINS -->
+<div class="alert alert-block alert-success">
+<button class="close" data-dismiss="alert" type="button"></button>
+<i class="ace-icon fa fa-check green"></i>
+La información que encuentra en este sitio web esta actualizada el <strong>{{ fecha_actualizacion }}</strong>.
+</div>
+{% if GRAFICO_FACTURACION == 1 and GRAFICO_COBRANZA == 1 %}
+<div class="row">
+<div class="col-sm-6">
+<div class="widget-box transparent">
+<div class="widget-header widget-header-flat">
+<h4 class="widget-title lighter">
+    <i class="ace-icon fa fa-rss orange"></i>
+    Cobranza Mensual</h4>
+</div>
+<div class="widget-body">
+<div class="widget-main padding-4">
+<div id="cobranza-charts" class="demo-placeholder"></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="col-sm-6">
+<div class="widget-box transparent">
+<div class="widget-header widget-header-flat">
+<h4 class="widget-title lighter">
+<i class="ace-icon fa fa-signal"></i>
+Facturación Mensual
+</h4>
+
+<div class="widget-toolbar">
+<a data-action="collapse" href="#">
+<i class="ace-icon fa fa-chevron-up"></i>
+</a>
+</div>
+</div>
+
+<div class="widget-body">
+<div class="widget-main padding-4">
+<div id="sales-charts" class="demo-placeholder"></div>
+</div><!-- /.widget-main -->
+</div><!-- /.widget-body -->
+</div><!-- /.widget-box -->
+</div><!-- /.col -->
+</div>
+{% endif %}  
+<div class="space-24"></div>
+<div class="alert alert-info">
+Si tiene algún problema con nuestra página web, 
+    escríbanos a <a href="#">dinastia.admon@gmail.com</a> y le daremos oportuna
+    respuesta a su requerimiento.
+</div>
+</div>
+    </div>
+</div>
+    </div>
+{% endblock %}

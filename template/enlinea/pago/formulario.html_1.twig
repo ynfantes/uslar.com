@@ -1,0 +1,207 @@
+{% extends 'layout/fluid.html.twig' %}
+{# JAVASCRIPT #}
+{% block head %}
+{{ parent() }}
+<script src="{{ constant('ROOT')}}js/comun.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ constant('ROOT') }}css/jquery-ui-1.8.16.custom.css">
+<script type="text/javascript" src="{{ constant('ROOT')}}js/jquery-validate/jquery.validate.js"></script>
+<script type="text/javascript" src="{{ constant('ROOT')}}js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="{{ constant('ROOT')}}js/jquery-validate/localization/messages_es.js"></script>
+<script type="text/javascript" src="{{constant('ROOT')}}js/jquery.ui.datepicker-es.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".error").hide();
+        $("#fecha_documento").datepicker({
+            maxDate: new Date()
+        });
+        $(":checkbox").live('click', function() {
+            var monto = 0;
+            $("input:checked").each(function() {
+                monto = parseFloat(monto) + (parseFloat($(this).closest("tr").find("td:last").text().replace(".", "").replace(",", ".")) * 100);
+            });
+            monto = monto / 100;
+            $("#monto").val(monto.formatCurrency());
+        });
+        $("#tipo_pago").change(function() {
+            if ($(this).val() == "T") {
+                $("#banco_origen").attr('disabled', false);
+                $('#num_docu').html("Código Transferencia:");
+            } else {
+                $("#banco_origen").attr('disabled', true);
+                $("#banco_origen").val('');
+                $('#num_docu').html("Número Depósito:");
+            }
+        });
+        $("#frmPago").validate();
+    });
+    </script>
+
+{% endblock %}
+{# TITULO #}
+{% block titulo accion|title ~ ' Pago de Codominio' %}
+{# CONTENIDO #}
+{% block contenido %}
+<div id="breadcrumbs" class="breadcrumbs breadcrumbs-fixed">
+<script type="text/javascript">
+try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+</script>
+<ul class="breadcrumb">
+<li>
+<i class="ace-icon fa fa-home home-icon"></i>
+<a href="{{constant('URL_SISTEMA')}}">{{ constant("NOMBRE_APLICACION")}}</a>
+</li>
+<li class="active">Pago de Condominio</li>
+</ul><!-- /.breadcrumb -->
+<div id="nav-search" class="nav-search">
+<form class="form-search">
+<span class="input-icon">
+<input type="text" autocomplete="off" id="nav-search-input" class="nav-search-input" placeholder="Search ...">
+<i class="ace-icon fa fa-search nav-search-icon"></i>
+</span>
+</form>
+</div><!-- /.nav-search -->
+</div>
+    <div class="page-content">
+    <div class="page-content-area">
+<div class="page-header">
+<h1>
+{{ accion|title }} <small>
+<i class="ace-icon fa fa-angle-double-right"></i>
+Pago de Condominio
+</small>
+</h1>
+</div>
+</div>
+{% if resultado is defined %}
+    {% include 'misc/resultado.html.twig' %}
+        <div style="min-height: 50px"></div>
+{% else %}
+    {% for cuenta in cuentas %}
+        <form id="frmPago" action="{{ constant('URL_SISTEMA')}}/pago/guardar" method="post" class=".form-horizontal">
+            <table  class="table table-bordered table-striped responsive-utilities">
+                <caption style="text-align: left;"><h5>{{ cuenta.inmueble.nombre_inmueble }}<br> 
+                        Apartamento/Casa: {{ cuenta.propiedades.apto }} <br>
+                        Deuda Total: Bs.
+                        {% if cuenta.propiedades.meses_pendiente > constant('MESES_COBRANZA') %}
+                                ---
+                        {% else %}
+                            {{ format_number(cuenta.propiedades.deuda_total) }}
+                        {% endif %}
+                    </h5>
+                    <p class="text-info">Marque las facturas a cancelar<p>
+                    {{ form.input('hidden','','','estatus','P', false) }}
+                    {{ form.input('hidden','','','enviado','0', false) }}
+                    {{ form.input('hidden','','','telefono','', false) }}
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th style="text-align: center">Pagar</th>
+                            <th style="text-align: center" class="hidden-phone">Nº Factura</th>
+                            <th style="text-align: center">Período</th>
+                            <th style="text-align: center" class="hidden-phone">Facturado</th>
+                            <th style="text-align: center" class="hidden-phone">Abonado</th>
+                            <th style="text-align: center">Saldo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                {% for factura in cuenta.cuentas %}
+                            <tr class="info">
+                                <td style="text-align: center">{{ form.input('checkbox','required',factura.numero_factura,'facturas[]',factura.numero_factura, false) }}</td>
+                                <td style="text-align: center" class="hidden-phone">
+                                    <a href="{{ constant('URL_SISTEMA')}}/avisos/ver/{{ factura.numero_factura}}" target="_blank">{{ factura.numero_factura}}</a></td>
+                                <td style="text-align: center">{{ factura.periodo | date("m-Y") | upper}}</td>
+                                <td class="hidden-phone"><span class="pull-right">{{ format_number(factura.facturado) }}</span></td>
+                                <td class="hidden-phone"><span class="pull-right">{{ format_number(factura.abonado) }}</span></td>
+                                <td><span class="pull-right">
+                            {{ format_number(factura.facturado - factura.abonado) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                {% endfor %}
+                                </tbody>
+                            </table>
+                            <label class="error" for="facturas[]">Debe seleccionar por lo menos una factura.</label>
+                    {% if cuenta.propiedades.meses_pendiente > constant('MESES_COBRANZA') %}
+                    <div class="alert alert-error" style="font-size: 120%">Estimado propietario(a) {{ session.usuario.nombre }}<br/><strong>Le agradecemos ponerse en contacto con el departamento de cobranzas</strong>.</div>
+                    {% else %}
+                    {% if cuenta.cuentas is empty %}
+                    <div class="alert alert-error">Estimado propietario(a) usted 
+                        <strong>No tiene recibos pendientes</strong>.</div>
+                    {% else %}
+                            <div class="row-fluid show-grid" style="text-align: left">
+                                <div class="span6">
+                                    <div class="control-group">
+                                        <label class="control-label">Medio de Pago</label>
+                                        <div class="controls">
+                                            <select name="tipo_pago" id="tipo_pago" class="required">
+                                                <option value="D">Depósito</option>
+                                                <option value="T">Transferencia</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label id="num_docu" for="numero_documento" class="control-label">Número de Depóisto</label>
+                                        <div class="controls">
+                            {{ form.input('text','required input-medium','numero_documento','numero_documento','', false) }}
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label for="numero_cuenta" class="control-label">Cuenta Destino</label>
+                                            <div class="controls">
+                                {{ form.input('text','required input-large','numero_cuenta','numero_cuenta','', false) }}
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label for="fecha_documento" class="control-label">Fecha Pago</label>
+                                                <div class="controls">
+                                                    <div class="input-prepend">
+                                                        <span class="add-on"><i class="icon-calendar"></i></span>
+                    {{ form.input('text','required input-small calendario','fecha_documento','fecha_documento','', false) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="span6">
+                                                <div class="control-group">
+                                                    <label for="banco_origen" class="control-label">Banco Origen de la Transferencia</label>
+                                                    <div class="controls">
+                                    {{ form.input('text','required input-large mayuscula','banco_origen','banco_origen','', true) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label for="banco_destino" class="control-label">Banco Destino</label>
+                                                        <div class="controls">
+                                    {{ form.input('text','required input-large mayuscula','banco_destino','banco_destino','', false) }}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="control-group">
+                                                            <label for="monto" class="control-label">Monto</label>
+                                                            <div class="controls input-prepend input-append">
+                                                                <span class="add-on">Bs.</span>
+                    {{ form.input('text','required input-medium input-prepend input-append','monto','monto','0,00', false) }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="control-group">
+                                                            <label for="email" class="control-label">e-mail Contacto</label>
+                                                            <div class="controls input-prepend input-append">
+                                                                <span class="add-on">@</span>
+                                            {{ form.input('text','required email input-medium input-prepend input-append','email','email','',false) }}
+                                                            </div>    
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+            {% if accion is defined %}
+                                                <div class="form-actions">
+                                                    <input type="submit" name="{{ accion }}" value="{{ accion|title }}" class="btn btn-primary"/>
+                                                </div>
+        {% endif %}
+        {% endif %}
+        {% endif %}                
+                            
+                                            </form>
+    {% endfor %}
+{% endif %}
+                                        </div>
+{% endblock %}

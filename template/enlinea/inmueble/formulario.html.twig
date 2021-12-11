@@ -1,0 +1,86 @@
+{% extends 'layout/fluid.html.twig' %}
+{# TITULO #}
+{% block titulo accion|title ~ ' Junta de Condominio' %}
+{# JAVASCRIPT #}
+{% block head %}
+{{ parent() }}
+<script type="text/javascript"> jQuery(function($) { $("ul.nav-list li").eq(4).addClass("active");  }); </script>
+{% endblock %}
+{# CONTENIDO #}
+{% block contenido %}
+<div id="breadcrumbs" class="breadcrumbs breadcrumbs-fixed">
+<script type="text/javascript">
+try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+</script>
+<ul class="breadcrumb">
+<li>
+<i class="ace-icon fa fa-home home-icon"></i>
+<a href="{{constant('URL_SISTEMA')}}">{{ constant("NOMBRE_APLICACION")}}</a>
+</li>
+<li class="active">Junta de Condominio</li>
+</ul><!-- /.breadcrumb -->
+<div id="nav-search" class="nav-search">
+<form class="form-search">
+<span class="input-icon">
+<input type="text" autocomplete="off" id="nav-search-input" class="nav-search-input" placeholder="Buscar ...">
+<i class="ace-icon fa fa-search nav-search-icon"></i>
+</span>
+</form>
+</div><!-- /.nav-search -->
+</div>
+<div class="page-content">
+<div class="page-content-area">
+<div class="page-header">
+<h1>
+Junta de Condominio<small>
+<i class="ace-icon fa fa-angle-double-right"></i>
+Integrantes
+</small>
+</h1>
+</div>
+</div>
+{% for condominio in junta %}
+<h3 class="header smaller lighter red">
+<i class="ace-icon fa fa-th-large"></i>
+{{ condominio.inmueble.nombre_inmueble }}
+</h3> 
+<table  class="table table-striped table-bordered table-hover">
+<thead>
+    <tr>
+        <th style="text-align: center"><i class="ace-icon fa fa-home bigger-110 hidden-480"></i>Apto/Casa</th>
+        <th style="text-align: center"><i class="ace-icon fa fa-user bigger-110 hidden-480"></i> Propietario</th>
+        <th style="text-align: center">Cargo Junta</th>
+        <th style="text-align: center"><i class="ace-icon fa fa-phone bigger-110 hidden-480"></i> Teléfono</th>
+        <th style="text-align: center"><i class="ace-icon fa fa-envelope-o bigger-110 hidden-480"></i> Correo Electrónico</th>
+    </tr>
+</thead>
+<tbody>
+        {% if not condominio.miembros is empty %}
+            {% set cedula = 0 %}
+            {% for miembro in condominio.miembros %}
+                {% if condominio.inmueble.id == miembro.id_inmueble %}
+                    {% if cedula != miembro.cedula %}
+                        <tr>    
+                        <td>{{ miembro.apto }}</td>
+                        <td>{{ miembro.nombre }}</td>
+                        <td>{{ miembro.descripcion }}</td>
+                        <td>{{ miembro.telefono1 }}</td>
+                        <td>{{ miembro.email }}</td></tr>
+                        {% set cedula = miembro.cedula %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+                    <tr>
+                        <td colspan="5"><div class="alert alert-error">
+                                <strong>Atención!</strong> Miembros de la Junta no registrados</div></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5"><div style="height: 40px"></div></td></tr>
+                    </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{# Barra lateral #}
+{% if session.usuario.id is not defined%}
+<form class="well" method="post" action="{{ constant('ROOT')}}login.php">
+    <label for="login">Login</label>
+    <input name="login" id="login" type="text" class="input-medium"/>
+    <label for="password">Password</label>
+    <input name="password" type="password" class="input-medium"/>
+    <input name="submit" type="submit" class="btn" value="Entrar"/>
+</form>
+{% else %}
+<div class="well">
+    <p><i class="icon-user"></i> Hola, {{ session.usuario.nombre }}</p>
+    <a href="{{ constant("URL_SISTEMA") }}/propietario?logout=true"><i class="icon-off"></i> Cerrar sesion</a>
+</div>
+
+<div class="well sidebar-nav">  
+    <ul class="nav nav-list">
+        <li class="nav-header">Propietario</li>
+        <li><a href="{{ constant("URL_SISTEMA")}}/propietario/actualizar"><i class="icon-user"></i>Datos Personales</a></li>
+        <li><a href="{{ constant("URL_SISTEMA")}}/propietario/actualizar/clave"><i class="icon-certificate"></i>Cambio de Clave</a></li>
+        <li class="nav-header">Mi Cuenta</li>
+        <li><a href="{{ constant("URL_SISTEMA")}}/cuenta"><i class="icon-th-list"></i>Estado de Cuenta</a></li>
+        <li><a href="{{ constant("URL_SISTEMA")}}/pago/registrar"><i class="icon-tasks"></i>Reportar Pago</a></li>
+        <li><a href="{{ constant("URL_SISTEMA")}}/propietario?logout=true"><i class="icon-download-alt"></i>Cancelación de Gastos</a></li>        
+    </ul>
+</div><!--/.well -->
+{% endif %}

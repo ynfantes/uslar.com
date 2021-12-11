@@ -1,0 +1,98 @@
+{% extends 'layout/fluid.html.twig' %}
+{# TITULO #}
+{% block titulo accion|title ~ ' Estado de Cuenta Inmueble' %}
+
+{# JAVASCRIPT #}
+{% block head %}
+{{ parent() }}
+<script src="{{ constant("ROOT")}}js/printThis.js"></script>
+<script type="text/javascript" >
+    $(document).ready(function() {
+        $(".btn-primary").click(function() {
+                $(".span3").css("display",'none');
+                $(".span9").css("width",'100%');
+                $("#printable").printThis({
+                    pageTitle : 'Estado de Cuenta ' + $(this).attr("title").toString()
+                });
+                $(".span3").css("display",'');
+                $(".span9").css("width",'870px');
+                return(false);
+            });
+    });
+</script>
+{% endblock %}
+
+{# CONTENIDO #}
+{% block contenido %}
+
+{% if resultado is defined %}
+    {% include 'misc/resultado.html.twig' %}
+    <div>
+        <a class="btn" href="{{ constant("URL_SISTEMA")}}/cliente">Volver al listado</a>
+    </div>
+{% else %}
+    {% block sidebar %}
+        {{ parent() }}
+    {% endblock %}
+    <div id="printable" class="span9">
+        <div class="page-header hidden-phone">
+            <h1>{{ accion|title }} Estado de Cuenta Inmueble</h1>
+        </div>
+        <ul class="breadcrumb">
+            <li><a href="{{constant('URL_SISTEMA')}}">{{ constant("NOMBRE_APLICACION")}}</a><span class="divider">&raquo;</span></li>
+            <li>{{ accion|title }} Estado de Cuenta Inmueble</li>
+
+        </ul>
+            <div style="min-height: 300px">    
+        <div class="accordion" id="accordion2">
+    {% for cuenta in cuentas %}
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                        {{ cuenta.inmueble.nombre_inmueble }}
+                    </a>
+                </div>
+                <div id="collapseOne" class="accordion-body collapse in">
+                    <div class="accordion-inner">
+                        <table  class="table table-bordered table-striped responsive-utilities">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center">Apartamento</th>
+                                    <th style="text-align: center">Propietario</th>
+                                    <th style="text-align: center">Nº Recibos</th>
+                                    <th style="text-align: center">Deuda</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if cuenta.cuenta is empty %}
+                                    <tr><td colspan="4"><div class="alert alert-error">
+                                            <strong>Atención!</strong> No se puede cargar esta información.</div></td></tr>
+                                {% else %}
+                                    {% set total = 0 %}
+                                    {% for detalle in cuenta.cuenta %}
+                                        {% set total = total + detalle.deuda %}
+                                        <tr>
+                                            <td>{{ detalle.apto }}</td>
+                                            <td>{{ detalle.propietario }}</td>
+                                            <td>{{ detalle.recibos }}</td>
+                                            <td><span class="pull-right">{{ format_number(detalle.deuda) }}</span></td>
+                                        </tr>
+                                    {% endfor %}
+                                        <tr><td colspan="2">&nbsp;</td><td><strong>Total:</strong></td>
+                                            <td><span class="pull-right"><strong>{{ format_number(total) }}</strong></span></td>
+                                        </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                            <div class="form-actions">
+                                <button class="btn btn-primary" type="submit" title="{{cuenta.inmueble.nombre_inmueble}}">Imprimir</button>
+                            </div>
+                    </div>
+                </div>
+            </div>    
+    {% endfor %}
+            </div>
+    </div>
+    </div>
+{% endif %}
+{% endblock %}

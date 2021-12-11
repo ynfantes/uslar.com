@@ -1,0 +1,32 @@
+ErrorDocument 404 /404.html
+
+Options +FollowSymLinks
+RewriteEngine on
+
+Rewriterule ^enlinea/([A-Za-z\-]+)/([A-Za-z\-]+)$ enlinea/$1/index.php?accion=$2 [L]
+#Rewriterule ^enlinea/([A-Za-z\-]+)/([A-Za-z\-]+)/([0-9]{1,5})$ enlinea/$1/index.php?accion=$2&id=$3 [L]
+Rewriterule ^enlinea/([A-Za-z\-]+)/([A-Za-z\-]+)/([0-9A-Za-z\-\_\.]+)$ enlinea/$1/index.php?accion=$2&id=$3 [L]
+Rewriterule ^intranet/([A-Za-z\-]+)/([A-Za-z\-]+)$ intranet/$1/index.php?accion=$2 [L]
+#Rewriterule ^intranet/([A-Za-z\-]+)/([A-Za-z\-]+)/([0-9A-Za-z\-\_\.]+)$ intranet/$1/index.php?accion=$2&id=$3 [L]
+#Rewriterule ^imprimirCancelacionDeGastos/([A-Za-z-_0-9]+)$ includes/html2pdf/examples/cancelacion.php?id=$1 [L]
+
+<ifmodule mod_expires.c> 
+ExpiresActive On
+#ExpiresByType text/css A2678400
+#ExpiresByType image/* A31536000
+Header set Connection keep-alive 
+<FilesMatch "\.(jpe?g|gif|png|css|js)$">
+#tiempo en cachear los archivos
+ExpiresDefault A31536000
+Header append Cache-Control "public"
+</FilesMatch>
+</ifmodule>
+<IfModule mod_headers.c>
+<FilesMatch "\.(jpe?g|gif|png|css|js)$">
+#tiempo en cachear los archivos
+Header set Cache-Control "max-age=14515200, public"
+</FilesMatch>
+<FilesMatch "\.(css|js)$">
+Header set Vary Accept-Encoding
+</FilesMatch>
+</IfModule>

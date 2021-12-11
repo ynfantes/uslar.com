@@ -1,0 +1,164 @@
+{% extends 'layout/fluid.html.twig' %}
+{# TITULO #}
+{% block titulo accion|title ~ ' Datos personales' %}
+{# JAVASCRIPT #}
+{% block head %}
+{{ parent() }}
+<script type="text/javascript"> 
+var id = 2;
+{% if id == 'clave' %} id = 3; {% endif %}
+jQuery(function($) { 
+    $("ul.nav-list li").eq(1).addClass("active open");
+    $("ul.nav-list li").eq(id).addClass("active");  
+});
+</script>
+{% endblock %}
+{# CONTENIDO #}
+{% block contenido %}
+<div id="breadcrumbs" class="breadcrumbs breadcrumbs-fixed">
+<script type="text/javascript">
+try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+</script>
+<ul class="breadcrumb">
+<li>
+<i class="ace-icon fa fa-home home-icon"></i>
+<a href="{{constant('URL_SISTEMA')}}">{{ constant("NOMBRE_APLICACION")}}</a>
+</li>
+<li class="active">Perfíl Propietario</li>
+</ul><!-- /.breadcrumb -->
+<div id="nav-search" class="nav-search">
+<form class="form-search">
+<span class="input-icon">
+<input type="text" autocomplete="off" id="nav-search-input" class="nav-search-input" placeholder="Buscar ...">
+<i class="ace-icon fa fa-search nav-search-icon"></i>
+</span>
+</form>
+</div><!-- /.nav-search -->
+</div>
+<div class="page-content">
+<div class="page-content-area">
+<div class="page-header">
+<h1>
+{{ accion |title }} {{ id |title }} 
+<small>
+<i class="ace-icon fa fa-angle-double-right"></i>
+Propietario
+</small>
+</h1>
+</div>
+</div>
+{% if resultado is defined %}
+{% include 'misc/resultado.html.twig' %}
+{% endif %}
+<div class="space"></div>
+<form id="formulario" method="post" action="{{ constant('URL_SISTEMA')}}/propietario/modificar/{{ id }}" class="well-small form-horizontal">
+<div class="tabbable">
+<ul class="nav nav-tabs padding-16">
+<li class="{% if id != 'clave' %}active {% endif %}">
+<a href="#edit-basic" data-toggle="tab">
+    <i class="green ace-icon fa fa-pencil-square-o bigger-125"></i>
+    Información Básica
+</a>
+</li>
+<li class="{% if id == 'clave' %}active {% endif %}">
+<a href="#edit-password" data-toggle="tab">
+<i class="blue ace-icon fa fa-key bigger-125"></i>
+Contraseña
+</a>
+</li>
+</ul>
+<div class="tab-content profile-edit-tab-content">
+<div class="tab-pane {% if id != 'clave' %}active {% endif %}" id="edit-basic">
+<h4 class="header blue bolder smaller">General</h4>
+<input type="hidden" name="id" value="{{ propietario.id }}"/>
+<input type="hidden" name="modificado" value="1"/>
+<div class="form-group">
+<label for="nombres" class="col-sm-3 control-label no-padding-right">Nombres/ Raz&oacute;n Social</label>
+<div class="col-sm-9">
+{{ form.input('text','col-xs-12 col-sm-8 required','nombre','nombre', propietario.nombre, true) }}
+</div>
+</div>
+<div class="space-4"></div>
+<div class="form-group">
+<label for="cedula" class="col-sm-3 control-label no-padding-right">Cédula de Identidad</label>
+<div class="col-sm-9">
+{{ form.input('text','input-medium','cedula','cedula', propietario.cedula, true) }}
+</div>
+</div>
+<div class="space"></div>
+<h4 class="header blue bolder smaller">Contacto</h4>
+<div class="form-group">
+<label for="telefono1" class="col-sm-3 control-label no-padding-right">Teléfono Habitación</label>
+<div class="col-sm-9">
+<span class="input-icon input-icon-left">
+{{ form.input('text','required alphanumeric input-medium input-mask-phone','telefono1','telefono1', propietario.telefono1, modoLectura)}}
+<i class="ace-icon fa fa-phone fa-flip-horizontal"></i>
+</span>
+</div>
+</div>
+<div class="space-4"></div>
+<div class="form-group">
+<label for="telefono2" class="col-sm-3 control-label no-padding-right">Teléfono Oficina</label>
+<div class="col-sm-9">
+<span class="input-icon input-icon-left">
+{{ form.input('text','required alphanumeric input-medium','telefono2','telefono2', propietario.telefono2, modoLectura)}}
+<i class="ace-icon fa fa-phone fa-flip-horizontal"></i>
+</span>
+</div>
+</div>
+<div class="space-4"></div>
+<div class="form-group">
+<label for="telefono2" class="col-sm-3 control-label no-padding-right">Teléfono Celular</label>
+<div class="col-sm-9">
+<span class="input-icon input-icon-left">
+{{ form.input('text','required alphanumeric input-medium','telefono3','telefono3', propietario.telefono3, modoLectura)}}
+<i class="ace-icon fa fa-phone fa-flip-horizontal"></i>
+</span>
+</div>
+</div>
+<div class="space-4"></div>
+<div class="form-group">
+<label for="email" class="col-sm-3 control-label no-padding-right">Correo electrónico</label>
+<div class="col-sm-9">
+<span class="input-icon input-icon-left">
+{{ form.input('text','required email','email','email', propietario.email, modoLectura)}}
+<i class="ace-icon fa fa-envelope"></i>
+</span>
+</div>
+</div>
+<div class="space-4"></div>
+<div class="form-group">
+<label for="direccion" class="col-sm-3 control-label no-padding-right">Dirección</label>
+<div class="col-sm-9">
+<textarea {{ modoLectura ? "disabled='disabled'" : "" }} name="direccion" class="required input-xxlarge">{{ propietario.direccion}}</textarea>
+</div>
+</div>
+</div>
+<div class="tab-pane {% if id == 'clave' %}active {% endif %}" id="edit-password">
+<div class="space-10"></div>
+<input type="hidden" name="cambio_clave" value="1"/>
+<div class="form-group">
+<label for="clave" class="col-sm-3 control-label no-padding-right">Contraseña Actual</label>
+<div class="col-sm-9">
+{{ form.input('password','required input-medium','clave_actual','clave_actual','', false) }}
+</div>
+</div>
+<div class="space-4"></div>
+<div class="form-group">
+<label for="clave_nueva" class="col-sm-3 control-label no-padding-right">Contraseña Nueva</label>
+<div class="col-sm-9">
+<input id="clave" class="required input-medium" type="password" name="clave" value="" maxlength="7">
+</div>
+</div>
+</div>
+</div>
+</div>
+{% if accion is defined %}
+<div class="clearfix form-actions">
+<div class="col-md-offset-3 col-md-9">
+<input type="submit" name="{{ accion }}" value="{{ accion|title }}" class="btn btn-primary"/>
+</div>
+</div>
+{% endif %}
+</form>
+{% endblock %}

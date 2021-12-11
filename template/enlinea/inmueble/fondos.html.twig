@@ -1,0 +1,163 @@
+{% extends 'layout/fluid.html.twig' %}
+{# TITULO #}
+{% block titulo accion|title ~ ' Cuentas de Fondos' %}
+
+{# JAVASCRIPT #}
+{% block head %}
+{{ parent() }}
+<script src="{{ constant("ROOT")}}js/jquery.dataTables.min.js"></script>
+<script src="{{ constant("ROOT")}}js/jquery.dataTables.bootstrap.min.js"></script>
+{% endblock %}
+
+{# CONTENIDO #}
+{% block contenido %}
+<div id="breadcrumbs" class="breadcrumbs breadcrumbs-fixed">
+<script type="text/javascript">
+try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+</script>
+<ul class="breadcrumb">
+<li>
+<i class="ace-icon fa fa-home home-icon"></i>
+<a href="{{constant('URL_SISTEMA')}}">{{ constant("NOMBRE_APLICACION")}}</a>
+</li>
+<li class="active">Estado de Cuenta Fondos</li>
+</ul><!-- /.breadcrumb -->
+<div id="nav-search" class="nav-search">
+<form class="form-search">
+<span class="input-icon">
+<input type="text" autocomplete="off" id="nav-search-input" class="nav-search-input" placeholder="Buscar ...">
+<i class="ace-icon fa fa-search nav-search-icon"></i>
+</span>
+</form>
+</div><!-- /.nav-search -->
+</div>
+<div class="page-content">
+<div class="page-content-area">
+<div class="page-header">
+<h1>
+Estado de Cuenta<small>
+<i class="ace-icon fa fa-angle-double-right"></i>
+Fondos
+</small>
+</h1>
+</div>
+</div>
+<h3 class="header smaller lighter red">
+<div class="input-group">
+<span class="input-group-addon">
+<i class="ace-icon fa fa-th-large"></i>
+</span>
+<select class="form-control" id="form-field-select-1">
+    
+{% for inmueble in propiedades %}
+   <option value="{{ inmueble.id }}" selected="{% if inmueble.id == id_inmueble %}selected{%endif%}">{{inmueble.nombre_inmueble}}</option>
+{% endfor %}
+</select>
+</div>
+</h3> 
+<div class="row">
+<div class="col-sm-12">
+
+<table class="table table-striped table-bordered table-hover">
+<thead class="thin-border-bottom"><tr><th style="text-align: center">Código de Gasto</th>
+<th style="text-align: center">Descripción</th>
+<th style="text-align: center" class="hidden-phone">Saldo</th>
+</thead>
+<tbody>
+{% set total = 0 %}
+{% for detalle in fondos %}
+{% set total = total + detalle.saldo %}
+<tr>
+<td style="text-align: center">
+<a href="{{ constant('URL_SISTEMA')}}/inmueble/listarCuentasDeFondo/{{ detalle.codigo_gasto}}">{{ detalle.codigo_gasto}}</a>
+</td>
+<td><a href="{{ constant('URL_SISTEMA')}}/inmueble/listarCuentasDeFondo/{{ detalle.codigo_gasto}}">{{detalle.descripcion}}</a></td>
+<td><span class="pull-right">{{ format_number(detalle.saldo) }}</span></td>
+</tr>
+{% endfor %}
+<tr><td colspan="2"><strong>Total fondos:</strong></td><td><span class="pull-right"><strong>{{format_number(total)}}</strong></span></td></tr>
+</tbody>
+</table>
+
+</div>
+
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="header smaller lighter red"><i class="ace-icon fa fa-th-large"></i> MOVIMIENTOS <strong>{{cuenta.descripcion}}</strong></h3>
+    <div>
+    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
+    <thead>
+    <tr>
+    <th>Fecha</th>
+    <th>Descripción</th>
+    <th>Debe</th>
+    <th>Haber</th>
+    <th>Saldo</th>
+    </tr>
+    </thead>
+    {% if not movimientos is empty %}
+        {% set saldo = 0 %}
+        <tbody>
+        {% for item in movimientos %}
+            {% set saldo = saldo + item.haber - item.debe %}
+            <tr>
+                <td style="text-align: center">{{item.fecha|date('d/m/Y')}}</td>
+                <td>{{item.concepto}}</td>
+                <td style="text-align: right">{{format_number(item.debe)}}</td>
+                <td style="text-align: right">{{format_number(item.haber)}}</td>
+                <td style="text-align: right">{{format_number(saldo)}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    {% endif %}
+    </table>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+jQuery(function($) {
+    //initiate dataTables plugin
+    var myTable = 
+ $('#dynamic-table')
+ .dataTable({
+    /**
+    sScrollY: "200px",//enable vertical scrolling
+    sScrollX: "100%",
+    sScrollXInner: "120%",//enable horizintal scrolling with its content 120% of its container
+    bScrollCollapse: true,
+    */
+
+    bAutoWidth: false,//for better responsiveness
+    "aoColumns": [
+      { "bSortable": false },
+      { "bSortable": false },
+      { "bSortable": false },
+      { "bSortable": false },
+      { "bSortable": false }
+    ],
+    "aaSorting": [],
+     "language": {
+        "sProcessing": "Procesando...",
+        "search":         "Buscar:",
+        "lengthMenu": "Mostrar _MENU_ registros por página",
+        "zeroRecords": "No hay registros con este criterío de búsqueda - Lo sentimos",
+        "info": "Mostrando página _PAGE_ de _PAGES_",
+        "sInfo": "Mostrando registros del _START_ al _END_ de un total de <strong>_TOTAL_</strong> registros",
+        "infoEmpty": "No existen movimientos en esta cuenta",
+        "infoFiltered": "(filtrado de _MAX_ total registros)",
+        "oPaginate": {
+		"sFirst":    "Primero",
+		"sLast":     "Ãšltimo",
+		"sNext":     "Siguiente",
+		"sPrevious": "Anterior"
+	},
+    },
+    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todo"]]
+ });
+    
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,37 @@
+{# Plantilla para paginacion de resultados #}
+{% extends 'layout/base.html.twig' %}
+{% block titulo 'Paginacion' %}
+{% block contenido %}
+<div class="page-header">
+    <h1>Paginacion <small>Demostracion de paginacion</small></h1>
+</div>
+<ul class="breadcrumb">
+    <li><a>Sistema</a><span class="divider">&raquo;</span></li>
+    <li><a>Paginacion</a><span class="divider">&raquo;</span></li>
+    <li>Listar</li>
+</ul>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+    {% for columna in columnas%}
+                <th><a href="{{url_sortable(registro) }}">{{ registro|title }}</a></th>
+    {% endfor %}
+                <th>Operaciones</th>
+            </tr>
+        </thead>
+    {% for fila in registros.data %}
+        <tr>
+            <td>{{registro|title}}</td>
+                <td>{{registro|title}}</td>
+            <td>
+                <a class="btn btn-primary" href="Modificar.php?id={{indice}}">Modificar</a>
+                <a class="btn btn-danger" href="modificar.php?id={{indice}}">Eliminar</a>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td>no hay resultados que mostrar</td>
+        </tr>
+    {%endfor%}
+    </table>
+{% endblock %}

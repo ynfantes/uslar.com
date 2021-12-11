@@ -1,0 +1,47 @@
+/* 
+    Document   : style
+    Created on : 09/04/2012, 11:35:41 PM
+    Author     : Anyul Rivas
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+label{
+    text-transform: capitalize;
+}
+.table thead th{
+    text-transform: capitalize;
+}
+ul.breadcrumb li a{
+    text-transform: capitalize;
+}
+#myModal{
+    display: none;
+}
+.alert p:first-letter{
+    text-transform: capitalize;
+}
+tfoot label.help-inline{
+    font-size: x-small;
+    color:red;
+}
+.responsive-utilities th small {
+    color: #999999;
+    display: block;
+    font-weight: normal;
+}
+.footer {
+        background-color: #1B1B1B;
+        border-top: 1px solid #E5E5E5;
+        margin-top: 70px;
+        padding: 70px 0;
+}
+.error {
+     color: #B94A48;
+     font-size: 90%;
+}
+
+.control-group.error input, .control-group.error select, .control-group.error textarea {
+    border-color: #B94A48;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}

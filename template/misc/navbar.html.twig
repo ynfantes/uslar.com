@@ -1,0 +1,78 @@
+{# Barra de Navegacion #}
+<div class="navbar navbar-default navbar-fixed-top" id="navbar">
+<script type="text/javascript">
+try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+</script>
+<div class="navbar-container" id="navbar-container">
+<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<div class="navbar-header pull-left">
+<a href="#" class="navbar-brand">
+<small>
+<img src="{{ constant('ROOT') }}/images/icon-web.png" title="{{ constant('NOMBRE_APLICACION') }}" style="float: left" />
+Administradora <br />
+</small>
+<strong>Dinastía</strong>
+</a>
+</div>
+{% if session.usuario.id is not defined %}
+<a class="brand" href="{{ constant("ROOT") }}enlinea">{{ constant('NOMBRE_APLICACION')}}</a>
+{% endif %}
+<!--div class="nav-collapse collapse">
+<ul class="nav">
+<li class="active">
+<a href="{{ constant("ROOT") }}">Administradora Halcón</a>
+</li>
+<li class="">
+<a href="{{ constant("ROOT") }}index.php#nuestra-empresa">Nuestra Empresa</a>
+</li>
+<li class="">
+<a href="{{ constant("ROOT") }}index.php#mision-vision">Misión y Vision</a>
+</li>
+<li class="">
+<a href="{{ constant("ROOT") }}index.php#contactenos">Contáctenos</a>
+</li>
+</ul>
+</div-->
+{% if session.usuario.id is defined %}
+<div role="navigation" class="navbar-buttons navbar-header pull-right">
+<ul class="nav ace-nav">
+<li class="light-blue">
+<a class="dropdown-toggle" href="#" data-toggle="dropdown">
+<span class="user-info">
+<small>Bienvenido(a),</small>
+{{ session.usuario.nombre }}
+</span>
+<i class="ace-icon fa fa-caret-down"></i>
+</a>
+<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+<li>
+<a href="#">
+<i class="ace-icon fa fa-cog"></i>
+Nueva contraseña
+</a>
+</li>
+<li>
+<a href="{{ constant('URL_SISTEMA')}}/propietario/actualizar">
+<i class="ace-icon fa fa-user"></i>
+Perfíl
+</a>
+</li>
+<li class="divider"></li>
+<li>
+<a href="{{ constant("URL_SISTEMA") }}/propietario?logout=true">
+<i class="ace-icon fa fa-power-off"></i>
+Cerrar Sesión
+</a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+{% endif %}
+</div>
+</div>
+

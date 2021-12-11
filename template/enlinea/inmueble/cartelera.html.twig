@@ -1,0 +1,42 @@
+{% extends 'layout/fluid.html.twig' %}
+{# TITULO #}
+{% block titulo accion|title ~ ' Cartelera Virutal' %}
+{# JAVASCRIPT #}
+{% block include %}
+{{ parent() }}
+{% endblock %}
+{# CONTENIDO #}
+{% block contenido %}
+{% if resultado is defined %}
+{% include 'misc/resultado.html.twig' %}
+<div>
+<a class="btn" href="{{ constant("URL_SISTEMA")}}/cliente">Volver al listado</a>
+</div>
+{% else %}
+{% block sidebar %}
+{{ parent() }}
+{% endblock %}
+<div class="span9">
+<div class="page-header hidden-phone">
+<h1>{{ accion|title }} Cartelera Virutal</h1>
+</div>
+<ul class="breadcrumb">
+<li><a href="{{constant('URL_SISTEMA')}}">{{ constant("NOMBRE_APLICACION")}}</a><span class="divider">&raquo;</span></li>
+<li>{{ accion|title }} Cartelera Virutal</li>
+</ul>
+<div class="hero-unit">
+<h2>Bienvenido a {{ constant('TITULO') }}.</h2>
+<p>Queremos aprovechar las herramientas tecnológicas a nuestro alcance, 
+para ofrecerle un servicio óptimo, donde pueda realizar todas sus operaciones de condominio
+desde cualquier lugar y en todo momento a través de nuestro sistema web.</p>
+<p>Con solo entrar al sistema usted podrá reportar sus pagos, consultar su estado de cuenta, descargar su aviso de cobro, 
+imprimir su cancelación de gastos, en pocos segundos. Y lo mejor de todo que lo tendrá 
+disponible al momento que usted lo necesite.</p>
+<p>A corto plazo estaremos incorporando nuevas funcionalidades, por eso es importante su opinión 
+con respecto al uso de este canal. Escribanos a 
+<span class="label">info@dinastiaadministradora.com.ve</span> y ayúdenos
+a brindarle el servicio que usted se merece.</p>
+</div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,51 @@
+{# formulario de logueo #}
+{% extends 'layout/base.html.twig'%}
+
+{% block titulo 'Iniciar sesion'%}
+{% block contenido %}
+<div class="row">
+    <div class="span6 offset3">
+        <p>&nbsp;</p>
+        {% if mensaje.success is defined %}
+            <div class="alert alert-success">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                <p>{{ mensaje.success }}</p>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                  <button data-dismiss="alert" class="close" type="button">×</button>
+                  Estimado usuario, esta a punto de ingresar a la intranet de Administradora Halcón.
+            </div> 
+        {% endif %}
+        {% if mensaje.error is defined %}
+            <div class="alert alert-error">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                <p>{{ mensaje.error }}</p>
+            </div>
+        {% endif %}
+        
+            <form method="post" class="form-horizontal" action="">
+                <fieldset>
+                    <div class="control-group">
+                        <legend>Ingrese sus datos</legend>
+                        <label class="control-label">Nombre de Usuario:</label>
+                        <div class="controls">
+                            <input type="text" name="usuario" id="usuario"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Clave:</label>
+                        <div class="controls">
+                            <input type="password" name="password" id="password"/>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-actions">
+                    <!--button class="btn" type="submit">Obtener Contraseña</button-->
+                    <input class="btn btn-primary" type="submit" value="Entrar" name="submit">
+                </div>
+            </form>
+        </div>
+        
+    </div>
+{% endblock %}

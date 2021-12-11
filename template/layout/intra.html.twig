@@ -1,0 +1,85 @@
+{# Plantilla fluida con menu lateral#}
+{% import 'macro-formularios.html.twig' as form %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Administradora de Condominio Halcon, Intranet">
+        <meta name="author" content="Edgar Messia (pronet21.com)">
+        {% block head %}
+        <script type="text/javascript" src="{{constant('ROOT')}}js/jquery-1.9.0.js"></script>
+        <link href="{{ constant("ROOT")}}css/bootstrap.css" rel="stylesheet">
+        <link href="{{ constant("ROOT")}}css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="{{ constant("ROOT")}}css/docs.css" rel="stylesheet">
+        <link href="{{ constant("ROOT")}}css/prettify.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{constant('ROOT')}}css/datepicker.css">
+        <link rel="shortcut icon" href="{{ constant("ROOT")}}img/favicon.png">
+        <script src="{{ constant("ROOT")}}js/jquery.js"></script>
+        {% endblock %}
+        <title>{% block titulo %}{% endblock %} - {{ constant('TITULO')}}</title>
+        
+    </head>
+    <body>
+        {% include 'misc/intrabar.html.twig' %}
+            {% block header %}
+            <header class="jumbotron subhead hidden-phone" id="overview">
+                <div class="container">
+                    <h1>Cobranza por Caja</h1>
+                    <p class="lead">Administración de Condominio por Internet.</p>
+                </div>
+            </header>
+            {% endblock %}
+            <div id="content" class="container">
+            <div class="row">
+            {% block contenido %}
+                    {% block sidebar %}
+                    
+                    {% endblock %}
+            {% endblock %}
+            </div>
+             </div>
+            <div id="footer" class="footer">
+            {% block footer %}
+                    <div class="container">
+                        <p>Calle Nueva, Qta Rimar, Planta Baja, Palmar Este. Caraballeda, Estado Vargas.</p>
+                        <p>Teléfonos: (0212)355 8583 - 8477 Fax: (0212)355 8605</p>
+                        <p>Atención al Cliente: Lunes a Viernes de 9:00am - 12:00m / 2:00pm - 4:30pm</p>
+                        <p>E-mail: info@administradorahalcon.com.ve</p>
+                        <ul class="footer-links">
+                            <li><a href="{{ constant("ROOT") }}">Administradora Halcón</a></li>
+                            <li class="muted">&middot;</li>
+                            <li><a href="{{ constant("ROOT") }}index.php#nuestra-empresa">Nuestra Empresa</a></li>
+                            <li class="muted">&middot;</li>
+                            <li><a href="{{ constant("ROOT") }}index.php#mision-vision">Misión y Visión</a></li>
+                            <li class="muted">&middot;</li>
+                            <li><a href="{{ constant("ROOT") }}index.php#contactenos">Contáctenos</a></li>
+                        </ul>
+                    </div>
+            {% endblock %}
+                </div>
+            <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script src="{{ constant("ROOT")}}js/bootstrap-transition.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-alert.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-modal.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-dropdown.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-scrollspy.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-tab.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-tooltip.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-popover.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-button.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-collapse.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-carousel.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-typeahead.js"></script>
+    <script src="{{ constant("ROOT")}}js/bootstrap-affix.js"></script>
+    <script src="{{ constant("ROOT")}}js/holder.js"></script>
+    <script src="{{ constant("ROOT")}}js/prettify.js"></script>
+    <script src="{{ constant("ROOT")}}js/application.js"></script>
+    <script>
+ 
+</script>
+            </body>
+</html>
