@@ -12,28 +12,28 @@ try{ace.settings.check('navbar' , 'fixed')}catch(e){}
 <div class="navbar-header pull-left">
 <a href="#" class="navbar-brand">
 <small>
-<img src="{{ constant('ROOT') }}/images/icon-web.png" title="{{ constant('NOMBRE_APLICACION') }}" style="float: left" />
-Administradora <br />
+<img src="{{constant('ROOT')}}/images/icon-web.png" title="{{constant('NOMBRE_APLICACION')}}" style="float: left" />
+Centro Comercial <br />
 </small>
-<strong>Dinastía</strong>
+<strong>Uslar</strong>
 </a>
 </div>
 {% if session.usuario.id is not defined %}
-<a class="brand" href="{{ constant("ROOT") }}enlinea">{{ constant('NOMBRE_APLICACION')}}</a>
+<a class="brand" href="{{constant("ROOT")}}enlinea">{{constant('NOMBRE_APLICACION')}}</a>
 {% endif %}
 <!--div class="nav-collapse collapse">
 <ul class="nav">
 <li class="active">
-<a href="{{ constant("ROOT") }}">Administradora Halcón</a>
+<a href="{#{ constant("ROOT")}#}">Administradora Halcón</a>
 </li>
 <li class="">
-<a href="{{ constant("ROOT") }}index.php#nuestra-empresa">Nuestra Empresa</a>
+<a href="{#{ constant("ROOT")}#}index.php#nuestra-empresa">Nuestra Empresa</a>
 </li>
 <li class="">
-<a href="{{ constant("ROOT") }}index.php#mision-vision">Misión y Vision</a>
+<a href="{#{ constant("ROOT")}#}index.php#mision-vision">Misión y Vision</a>
 </li>
 <li class="">
-<a href="{{ constant("ROOT") }}index.php#contactenos">Contáctenos</a>
+<a href="{#{ constant("ROOT")}#}index.php#contactenos">Contáctenos</a>
 </li>
 </ul>
 </div-->

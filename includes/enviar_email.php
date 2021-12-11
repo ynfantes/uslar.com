@@ -1,5 +1,5 @@
 <?php
-$message="Contacto Dinastia<br/>";
+$message="Contacto Centro Comercial Uslar<br/>";
 $message.=$_POST["email"]."<br>";
 $message.=$_POST["nombre"]."<br>";
 $message.=$_POST["mensaje"];
@@ -8,8 +8,8 @@ $headers = "Content-Language:es-ve\n";
 $headers .= "Content-Type: text/html; charset=iso-8859-1\n";
 $headers .= "bcc:ynfantes@gmail.com\n";
 
-$subject = "Contacto dinastiaadministradora.com.ve";
-$headers .= 'From: Contacto <info@dinastiaadministradora.com.ve>'."\r\n".'Reply-To:'.$_POST["email"]."\r\n" ;
+$subject = "Contacto app.centrocomercialuslar.com";
+$headers .= 'From: Contacto <info@app.centrocomercialuslar.com>'."\r\n".'Reply-To:'.$_POST["email"]."\r\n" ;
 $email = "info@dinastiaadminstradora.com.ve";
 
 //$email = isset($_POST['token']) ? "info@sistemavaloriza.com" : "ynfantes@gmail.com";
