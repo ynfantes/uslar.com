@@ -81,60 +81,72 @@ de condominio
         <div class="col-xs-12 col-sm-9">
         <div class="clearfix">
         <table  class="table table-bordered table-striped responsive-utilities">
-            <caption style="text-align: left;"><h5>{{ cuenta.inmueble.nombre_inmueble }}<br> 
-                Apartamento/Casa: {{ cuenta.propiedades.apto }} <br>
-                Deuda Total: Bs.
-                {% if cuenta.propiedades.meses_pendiente > constant('MESES_COBRANZA') %}
-                        ---
-                {% else %}
-                    {{ format_number(cuenta.propiedades.deuda_total) }}
-                {% endif %}
-            </h5>
-            <p class="text-info">Marque las facturas a cancelar<p>
+            <caption style="text-align: left;">
+                <h5>{{ cuenta.inmueble.nombre_inmueble }}<br> 
+                    Apartamento/Casa: {{ cuenta.propiedades.apto }} <br>
+                    Deuda Total: Bs.
+                    {% if cuenta.propiedades.meses_pendiente > constant('MESES_COBRANZA') %}
+                            ---
+                    {% else %}
+                        {{ format_number(cuenta.propiedades.deuda_total) }}
+                        <p class="text-info">Marque las facturas a cancelar<p>
+                    {% endif %}
+                </h5>
             </caption>
-            <thead>
-                <tr>
-                    <th style="text-align: center">Pagar</th>
-                    <th style="text-align: center" class="hidden-phone">Nº Factura</th>
-                    <th style="text-align: center">Período</th>
-                    <th style="text-align: center" class="hidden-phone">Facturado</th>
-                    <th style="text-align: center" class="hidden-phone">Abonado</th>
-                    <th style="text-align: center">Saldo</th>
-                    <th style="text-align: center">Estatus</th>
-                </tr>
-            </thead>
-            <tbody>
-        {% for factura in cuenta.cuentas %}
+            {% if cuenta.propiedades.meses_pendiente > constant('MESES_COBRANZA') %}
+                <tbody>
                     <tr>
-                        <td style="text-align: center">
-                        <input type="checkbox" name="id[]" value="{{ counter }}" {{ factura.pagado > 0? "disabled=\'disabled\'":"" }}>
-                        </td>
-                        <td style="text-align: center" class="hidden-phone">
-                        <input type="hidden" name="id_inmueble[]" value="{{ factura.id_inmueble }}" />
-                        <input type="hidden" name="id_apto[]" value="{{ factura.apto }}" />
-                        <input type="hidden" name="periodo[]" value="{{ factura.periodo }}" />
-                        <input type="hidden" name="facturas[]" value="{{ factura.numero_factura }}" />
-                        {% if factura.aviso %}
-                        <a href="{{ constant('URL_SISTEMA')}}/avisos/ver/{{ factura.numero_factura}}" target="_blank">{{ factura.numero_factura}}</a>
-                        {% else %}
-                        <abbr title="Aviso de Cobro NO DISPONIBLE" class="initialism">{{ factura.numero_factura}}</abbr>
-                        {%endif %}
-                        </td>
-                        <td style="text-align: center">{{ factura.periodo | date("m-Y") | upper}}</td>
-                        <td class="hidden-phone"><span class="pull-right">{{format_number(factura.facturado)}}</span></td>
-                        <td class="hidden-phone"><span class="pull-right">{{format_number(factura.abonado)}}</span></td>
-                        <td>
-                            <input type="hidden" name="montos[]" value="{{ factura.facturado - factura.abonado }}" />
-                            <span class="pull-right">
-                    {{ format_number(factura.facturado - factura.abonado) }}
-                                    </span>
+                    <td>
+                    <div class="alert alert-danger" style="font-size: 120%">{{'Estimado propietario(a) ' ~ session.usuario.nombre ~ '(' ~ cuenta.propiedades.apto ~ ')' }}<br/>
+                    <strong>Le agradecemos ponerse en contacto con el departamento de cobranzas</strong>.</div>
+                    </td>
+                    </tr>
+                </tbody>
+            {% else %}
+                <thead>
+                    <tr>
+                        <th style="text-align: center">Pagar</th>
+                        <th style="text-align: center" class="hidden-phone">Nº Factura</th>
+                        <th style="text-align: center">Período</th>
+                        <th style="text-align: center" class="hidden-phone">Facturado</th>
+                        <th style="text-align: center" class="hidden-phone">Abonado</th>
+                        <th style="text-align: center">Saldo</th>
+                        <th style="text-align: center">Estatus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for factura in cuenta.cuentas %}
+                            <tr>
+                                <td style="text-align: center">
+                                <input type="checkbox" name="id[]" value="{{ counter }}" {{ factura.pagado > 0? "disabled=\'disabled\'":"" }}>
                                 </td>
-                                <td>{% if factura.pagado == 0 %} <span class="label label-sm label-success">Pendiente</span> {% else %}<span class="label label-sm label-warning">Pago ya registrado</span> {% endif %}</td>
-                            </tr>
-        {% set counter = counter + 1 %}
-        {% endfor %}
-                        </tbody>
-                    </table>
+                                <td style="text-align: center" class="hidden-phone">
+                                <input type="hidden" name="id_inmueble[]" value="{{ factura.id_inmueble }}" />
+                                <input type="hidden" name="id_apto[]" value="{{ factura.apto }}" />
+                                <input type="hidden" name="periodo[]" value="{{ factura.periodo }}" />
+                                <input type="hidden" name="facturas[]" value="{{ factura.numero_factura }}" />
+                                {% if factura.aviso %}
+                                <a href="{{ constant('URL_SISTEMA')}}/avisos/ver/{{ factura.numero_factura}}" target="_blank">{{ factura.numero_factura}}</a>
+                                {% else %}
+                                <abbr title="Aviso de Cobro NO DISPONIBLE" class="initialism">{{ factura.numero_factura}}</abbr>
+                                {%endif %}
+                                </td>
+                                <td style="text-align: center">{{ factura.periodo | date("m-Y") | upper}}</td>
+                                <td class="hidden-phone"><span class="pull-right">{{format_number(factura.facturado)}}</span></td>
+                                <td class="hidden-phone"><span class="pull-right">{{format_number(factura.abonado)}}</span></td>
+                                <td>
+                                    <input type="hidden" name="montos[]" value="{{ factura.facturado - factura.abonado }}" />
+                                    <span class="pull-right">
+                            {{ format_number(factura.facturado - factura.abonado) }}
+                                            </span>
+                                        </td>
+                                        <td>{% if factura.pagado == 0 %} <span class="label label-sm label-success">Pendiente</span> {% else %}<span class="label label-sm label-warning">Pago ya registrado</span> {% endif %}</td>
+                                    </tr>
+                {% set counter = counter + 1 %}
+                {% endfor %}
+                </tbody>
+            {% endif %}
+        </table>
         </div></div></div>
         {% endfor %}
         {% endif %}

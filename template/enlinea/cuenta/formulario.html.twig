@@ -78,7 +78,7 @@ click sobre el número de factura.
 </div>
 <div class="col-sm-8">
 {% if cuenta.propiedades.meses_pendiente > constant('MESES_COBRANZA') %}
-<div class="alert alert-error" style="font-size: 120%">Estimado propietario(a) {{ session.usuario.nombre }}<br/><strong>Le agradecemos ponerse en contacto con el departamento de cobranzas</strong>.</div>
+<div class="alert alert-danger" style="font-size: 120%">Estimado propietario(a) {{ session.usuario.nombre }}<br/><strong>Le agradecemos ponerse en contacto con el departamento de cobranzas</strong>.</div>
 {% else %}
 {% if cuenta.cuentas is empty %}
 <div class="alert alert-danger">
