@@ -59,13 +59,12 @@ opacity: 0.8
 <div class="widget-body">
 <div class="widget-main">
 {% if mensaje.error is defined %}
-<div class="alert alert-{{mensaje.suceed == true ? 'success':'danger' }}">
-<button data-dismiss="alert" class="close">
-<i class="ace-icon fa fa-times"></i>
-</button>
-<i class="ace-icon fa fa-hand-o-right"></i> {{ mensaje.error }}
-
-</div>
+    <div class="alert alert-{{mensaje.suceed == true ? 'success':'danger' }}">
+    <button data-dismiss="alert" class="close">
+    <i class="ace-icon fa fa-times"></i>
+    </button>
+    <i class="ace-icon fa fa-hand-o-right"></i> {{" #{mensaje.error}"|raw}}
+    </div>
 {% endif %}
 <h4 class="header blue lighter bigger">
 <i class="ace-icon fa fa-coffee green"></i>
@@ -231,8 +230,8 @@ if ('ontouchstart' in document.documentElement)
 document.write("<script src='{{ constant("ROOT")}}/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
 </script>
 <!-- page specific plugin scripts -->
-<script src="{{ constant("ROOT")}}/js/jquery-validate/jquery.validate.min.js"></script>
-<script src="{{ constant("ROOT")}}/js/bootstrap-alert.js"></script>
+<script src="{{constant("ROOT")}}/js/jquery-validate/jquery.validate.min.js"></script>
+<script src="{{constant("ROOT")}}/js/bootstrap-alert.js"></script>
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 jQuery(function($) {
@@ -346,7 +345,6 @@ invalidHandler: function(form) {
 }
 });
 });
-
 </script>
 </body>
 </html>

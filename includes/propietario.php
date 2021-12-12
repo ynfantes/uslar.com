@@ -160,7 +160,7 @@ class propietario extends db implements crud  {
                 }
             } else {
                 $result=false;
-                $result['error']="Email no registrado. Si considera
+                $result['error']="<strong>Email no registrado.</strong> Si considera
                     que es un error, póngase en contacto con Administradora Dinastía";
             }
         } else {
