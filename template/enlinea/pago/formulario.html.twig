@@ -110,7 +110,8 @@ de condominio
                         <th style="text-align: center">Período</th>
                         <th style="text-align: center" class="hidden-phone">Facturado</th>
                         <th style="text-align: center" class="hidden-phone">Abonado</th>
-                        <th style="text-align: center">Saldo</th>
+                        <th style="text-align: center">Saldo Bs</th>
+                        <th style="text-align: center">Saldo $</th>
                         <th style="text-align: center">Estatus</th>
                     </tr>
                 </thead>
@@ -121,14 +122,14 @@ de condominio
                                 <input type="checkbox" name="id[]" value="{{ counter }}" {{ factura.pagado > 0? "disabled=\'disabled\'":"" }}>
                                 </td>
                                 <td style="text-align: center" class="hidden-phone">
-                                <input type="hidden" name="id_inmueble[]" value="{{ factura.id_inmueble }}" />
-                                <input type="hidden" name="id_apto[]" value="{{ factura.apto }}" />
-                                <input type="hidden" name="periodo[]" value="{{ factura.periodo }}" />
-                                <input type="hidden" name="facturas[]" value="{{ factura.numero_factura }}" />
+                                <input type="hidden" name="id_inmueble[]" value="{{factura.id_inmueble}}" />
+                                <input type="hidden" name="id_apto[]" value="{{factura.apto}}" />
+                                <input type="hidden" name="periodo[]" value="{{factura.periodo}}" />
+                                <input type="hidden" name="facturas[]" value="{{factura.numero_factura}}" />
                                 {% if factura.aviso %}
-                                <a href="{{ constant('URL_SISTEMA')}}/avisos/ver/{{ factura.numero_factura}}" target="_blank">{{ factura.numero_factura}}</a>
+                                <a href="{{ constant('URL_SISTEMA')}}/avisos/ver/{{ factura.numero_factura}}" target="_blank">{{factura.numero_factura}}</a>
                                 {% else %}
-                                <abbr title="Aviso de Cobro NO DISPONIBLE" class="initialism">{{ factura.numero_factura}}</abbr>
+                                <abbr title="Aviso de Cobro NO DISPONIBLE" class="initialism">{{factura.numero_factura}}</abbr>
                                 {%endif %}
                                 </td>
                                 <td style="text-align: center">{{ factura.periodo | date("m-Y") | upper}}</td>
@@ -136,11 +137,16 @@ de condominio
                                 <td class="hidden-phone"><span class="pull-right">{{format_number(factura.abonado)}}</span></td>
                                 <td>
                                     <input type="hidden" name="montos[]" value="{{ factura.facturado - factura.abonado }}" />
-                                    <span class="pull-right">
-                            {{ format_number(factura.facturado - factura.abonado) }}
-                                            </span>
-                                        </td>
-                                        <td>{% if factura.pagado == 0 %} <span class="label label-sm label-success">Pendiente</span> {% else %}<span class="label label-sm label-warning">Pago ya registrado</span> {% endif %}</td>
+                                    <span class="pull-right">{{format_number(factura.facturado - factura.abonado)}}</span>
+                                </td>
+                                <td><span class="pull-right">{{format_number(factura.facturado_usd)}}</span></td>
+                                <td>
+                                    {% if factura.pagado == 0 %} 
+                                        <span class="label label-sm label-success">Pendiente</span> 
+                                    {% else %}
+                                        <span class="label label-sm label-warning">Pago ya registrado</span> 
+                                    {% endif %}
+                                </td>
                                     </tr>
                 {% set counter = counter + 1 %}
                 {% endfor %}

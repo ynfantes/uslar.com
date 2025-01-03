@@ -1,0 +1,119 @@
+{% extends 'layout/fluid.html.twig' %}
+{# TITULO #}
+{% block titulo accion|title ~ ' Estado de Cuenta Propietario' %}
+{# JAVASCRIPT #}
+{% block head %}
+{{ parent() }}
+<script type="text/javascript"> jQuery(function($) { $("ul.nav-list li").eq(7).addClass("active");  }); </script>
+{% endblock %}
+{# CONTENIDO #}
+{% block contenido %}
+<div id="breadcrumbs" class="breadcrumbs breadcrumbs-fixed">
+<script type="text/javascript">
+try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+</script>
+<ul class="breadcrumb">
+<li>
+<i class="ace-icon fa fa-home home-icon"></i>
+<a href="{{constant('URL_SISTEMA')}}">{{ constant("NOMBRE_APLICACION")}}</a>
+</li>
+<li class="active">Estado de cuenta pagos</li>
+</ul><!-- /.breadcrumb -->
+<div id="nav-search" class="nav-search">
+<form class="form-search">
+<span class="input-icon">
+<input type="text" autocomplete="off" id="nav-search-input" class="nav-search-input" placeholder="Buscar ...">
+<i class="ace-icon fa fa-search nav-search-icon"></i>
+</span>
+</form>
+</div><!-- /.nav-search -->
+</div>
+<div class="page-content">
+    <div class="page-content-area">
+<div class="page-header">
+<h1>
+Estado de Cuenta<small>
+<i class="ace-icon fa fa-angle-double-right"></i>
+Pagos
+</small>
+</h1>
+</div>
+</div>
+{% for cuenta in cuentas %}
+<h3 class="header smaller lighter red">
+<i class="ace-icon fa fa-th-large"></i>
+{{ cuenta.inmueble.nombre_inmueble }} - {{ cuenta.propiedades.apto }} 
+</h3> 
+<div class="row">
+<div class="col-sm-5">
+    <table  class="table table-bordered table-striped responsive-utilities">
+        <thead>
+            <tr>
+                <th style="text-align: center">Local</th>
+                <th style="text-align: center">Deuda Inmueble </th>
+                <th style="text-align: center">Fondo de Reserva</th>
+                <th style="text-align: center">Deuda Condominio</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align: center">{{ cuenta.propiedades.apto }}</td>
+                <td><span class="pull-right">{{ format_number(cuenta.inmueble.deuda) }}</span></td>
+                <td><span class="pull-right">{{ format_number(cuenta.inmueble.fondo_reserva) }}</span></td>
+                <td><span class="pull-right">{{ format_number(cuenta.propiedades.deuda_total) }}</span></td>
+            </tr>
+        </tbody></table>
+        <div class="alert alert-info">
+        <i class="ace-icon fa fa-bullhorn"></i>
+        <strong>Importante!</strong>
+        Aquí podrá consultar, descargar o imprimir sus últimos 5 recibos de condominio cancelados.
+        <br>
+        </div>
+</div>
+<div class="col-sm-7">
+        {% if cuenta.cuentas is empty %}
+            <div class="alert alert-danger">
+            <strong><i class="ace-icon fa fa-times"></i> Atención: </strong>usted 
+            Estimado propietario usted no tiene recibos cancelados.
+            </div>
+        {% else %}
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th style="text-align: center" class="hidden-phone">Fecha Pago</th>
+                    <th style="text-align: center">Nº Factura</th>
+                    <th style="text-align: center" class="hidden-phone">Período</th>
+                    <th style="text-align: center">Monto</th>
+                    <th style="text-align: center" class="hidden-phone">Descargar</th>
+            </thead>
+            <tbody>
+    {% for factura in cuenta.cuentas %}
+            <tr>
+            <td style="text-align: center" class="hidden-phone">{{ factura.fecha_movimiento | date("d-m-Y")}}</td>
+            <td style="text-align: center">
+            {% if factura.recibo %}
+            <a href="{{ constant('URL_SISTEMA')}}/pago/cancelacion/{{ factura.numero_factura}}" target="_blank">{{ factura.numero_factura}}</a>
+            {% else %}
+            <abbr title="Cancelación de Gastos NO DISPONIBLE" class="initialism">{{ factura.numero_factura}}</abbr>
+            {%endif %}
+            </td>
+            <td style="text-align: center" class="hidden-phone">{{ factura.periodo }}</td>
+            <td><span class="pull-right">{{ format_number(factura.monto) }}</span></td>
+            <td class="hidden-phone">
+                {% if factura.recibo %}
+                    <a data-toggle="modal" title="click para descargar" href="{{ constant('URL_SISTEMA')}}/pago/cancelacion/{{ factura.numero_factura}}" class="btn btn-xs btn-success" target="_blank"><i class="ace-icon fa fa-download bigger-120"></i></a>
+                {% else %}
+                    <span class="label label-danger arrowed">No Disponible</span>
+                {% endif %}
+            </td>
+            </tr>
+    {% endfor %}
+                
+            </tbody>
+        </table>
+            {% endif %}
+    </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -53,7 +53,8 @@ Propietario
 <th style="text-align: center">Apartamento</th>
 <th style="text-align: center" class="hidden">Deuda<small>Inmueble</small></th>
 <th style="text-align: center" class="hidden">Fondo<small>de Reserva</small></th>
-<th style="text-align: center">Deuda Total</th>
+<th style="text-align: center">Deuda Total Bs.</th>
+<th style="text-align: center">Deuda Total $.</th>
 </tr>
 </thead>
 <tbody>
@@ -66,6 +67,13 @@ Propietario
 ---
 {% else %}
 {{ format_number(cuenta.propiedades.deuda_total) }}
+{% endif %}
+</span></td>
+<td><span class="pull-right">
+{% if cuenta.propiedades.meses_pendiente > constant('MESES_COBRANZA') %}
+---
+{% else %}
+{{ format_number(cuenta.propiedades.deuda_usd) }}
 {% endif %}
 </span></td>
 </tr>
@@ -91,7 +99,8 @@ no tiene recibos pendiente de pago.
 <th style="text-align: center">Período</th>
 <th style="text-align: center" class="hidden-phone">Facturado</th>
 <th style="text-align: center" class="hidden-phone">Abonado</th>
-<th style="text-align: center">Saldo</th>
+<th style="text-align: center">Saldo Bs.</th>
+<th style="text-align: center">Saldo $</th>
 <th style="text-align: center">Aviso de Cobro</th>
 </thead>
 <tbody>
@@ -108,6 +117,7 @@ no tiene recibos pendiente de pago.
 <td class="hidden-phone"><span class="pull-right">{{ format_number(factura.facturado) }}</span></td>
 <td class="hidden-phone"><span class="pull-right">{{ format_number(factura.abonado) }}</span></td>
 <td><span class="pull-right">{{ format_number(factura.facturado - factura.abonado) }}</span></td>
+<td><span class="pull-right">{{ format_number(factura.facturado_usd) }}</span></td>
 <td>{% if factura.aviso %}
 <a class="label label-success arrowed" href="{{ constant('URL_SISTEMA')}}/avisos/ver/{{ factura.numero_factura}}" target="_blank">Disponible</a>
 {% else %}

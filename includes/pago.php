@@ -339,4 +339,17 @@ class pago extends db implements crud {
         }
         
     }
+
+    public function insertarCancelacionDeGastos($data) {
+        return db::insert("cancelacion_gastos",$data);
+    }
+
+    public function listarCancelacionDeGastos($inmueble, $apartamento) {
+        $r = $this->select("*,CONCAT('01-', periodo ) AS fPeriodo", 
+                "cancelacion_gastos",
+                Array("id_inmueble"=>$inmueble,"id_apto"=>$apartamento),
+                null,
+                Array("fecha_movimiento"=>"DESC","STR_TO_DATE(CONCAT('01-', periodo), '%d-%m-%Y')"=>"DESC"));
+        return $r;
+    }
 }

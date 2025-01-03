@@ -93,7 +93,7 @@ class mailto {
             $this->mail->AddAddress('ynfantes@gmail.com','Edgar Messia');
         } else {
             $this->mail->AddAddress($emailDestinatario, $nombreDestinatario);
-            $this->mail->AddBCC("ynfantes@gmail.com","Edgar Messia");
+            //$this->mail->AddBCC("ynfantes@gmail.com","Edgar Messia");
         }
         
         $this->mail->IsHTML(true);

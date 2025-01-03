@@ -182,11 +182,17 @@ Class db {
                 if ($order != null) {
                     $query.= " order by ";
                     if (is_array($order)) {
+                        $q=0;
                         foreach ($order as $key => $val) {
+                            if ($q>0) {
+                                $query.=', ';
+                            }
                             $query.= $key . " " . $val;
+                            $q++;
                         }
                     }
                 }
+                
                 if ($groupby != null) {
                     //TODO falta por desarrollar
                 }

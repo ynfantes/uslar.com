@@ -12,18 +12,66 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : "listar";
 
 switch ($accion) {
     
-    // <editor-fold defaultstate="collapsed" desc="cancelacion">
     case "cancelacion":
         $titulo = $_GET['id'] . ".pdf";
         $content = 'Content-type: application/pdf';
-        $url = ROOT . "cancelacion.gastos/" . $_GET['id'] . ".pdf";
+        $url = ROOT."cancelacion.gastos/" . $_GET['id'] . ".pdf";
         header('Content-Disposition: attachment; filename="' . $titulo . '"');
         header($content);
         readfile($url,false);
         break;
-    // </editor-fold>
-    
-    // <editor-fold defaultstate="collapsed" desc="ver">
+    case "listarRecibosCancelados":
+        $propiedad = new propiedades();
+        $inmuebles = new inmueble();
+        $pagos = new pago();
+
+        $propiedades = $propiedad->propiedadesPropietario($_SESSION['usuario']['cedula']);
+
+        $cuenta = Array();
+
+        if ($propiedades['suceed']) {
+
+            foreach ($propiedades['data'] as $propiedad) {
+
+                $inmueble = $inmuebles->ver($propiedad['id_inmueble']);
+                
+                $pago = $pagos->listarCancelacionDeGastos($propiedad['id_inmueble'], $propiedad['apto']);
+                
+                
+                if ($pago['suceed'] == true) {
+                    
+                    $bitacora->insertar(Array(
+
+                        'id_sesion'   => $session['id_sesion'],
+                        'id_accion'   => 12,
+                        'descripcion' => count($pago['data'])." recibos(s) registrado(s).",
+
+                    ));
+
+                    for ($index = 0; $index < count($pago['data']); $index++) {
+                        
+                        $filename = "../../cancelacion.gastos/" . $pago['data'][$index]['numero_factura'] . ".pdf";
+                        $pago['data'][$index]['recibo'] = file_exists($filename);
+                        
+                    }
+                    
+                    $cuenta[] = Array(
+
+                        'inmueble'     => $inmueble['data'][0],
+                        'propiedades'  => $propiedad,
+                        'cuentas'      => $pago['data']
+
+                    );
+                }
+            }
+        }
+        
+        echo $twig->render('enlinea/pago/cancelacion.gastos.html.twig', array("session" => $session,
+            "cuentas" => $cuenta));
+
+
+        break;    
+
     case "ver":
         $propiedad = new propiedades();
         $inmuebles = new inmueble();
@@ -65,9 +113,8 @@ switch ($accion) {
             "cuentas" => $cuenta));
 
 
-        break; // </editor-fold>
+        break; 
     
-    // <editor-fold defaultstate="collapsed" desc="guardar">
     case "guardar":
         $pago = new pago();
         $data = $_POST;
@@ -88,9 +135,7 @@ switch ($accion) {
         echo json_encode($exito);
         
         break;
-    // </editor-fold>
     
-    // <editor-fold defaultstate="collapsed" desc="registrar">
         case "registrar":
         case "listar":
         default :
@@ -148,9 +193,7 @@ switch ($accion) {
         "propiedades"=>$propiedades['data']
         ));
         break; 
-// </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="listaPagoDetalle">
     case "listaPagosDetalle":
         $pagos = new pago();
         $pago_detalle = $pagos->detalleTodosPagosPendientes();
@@ -166,9 +209,7 @@ switch ($accion) {
             }
         }
         break; 
-// </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="listaPagosMaestros">
     case "listaPagosMaestros":
         $pagos = new pago();
         $pagos_maestro = $pagos->listarPagosPendientes();
@@ -194,9 +235,7 @@ switch ($accion) {
             }
         }
         break; 
-// </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="listaPagosPendientes">
     case "listarPagosPendientes":
         $pagos = new pago();
         $pagos_maestro = $pagos->listarPagosPendientes();
@@ -241,9 +280,8 @@ switch ($accion) {
         }
 
 
-        break; // </editor-fold>
+        break; 
 
-    // <editor-fold defaultstate="collapsed" desc="confirmación de pago">
     case "confirmar":
 
         $pago = new pago();

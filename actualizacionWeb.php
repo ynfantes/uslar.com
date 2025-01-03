@@ -11,7 +11,18 @@ include_once 'includes/factura.php';
 
 $db = new db();
 
-$tablas = array("DetFact", "facturas", "propiedades", "propietarios", "junta_condominio", "inmueble", "inmueble_deuda_confidencial","fondos_movimiento");
+$tablas = [
+    "DetFact", 
+    "facturas", 
+    "propiedades", 
+    "propietarios", 
+    "junta_condominio", 
+    "inmueble", 
+    "inmueble_deuda_confidencial",
+    "fondos_movimiento",
+    "fondos",
+    "cancelacion_gastos",
+];
 
 if (isset($_GET['codinm'])) {
     $codinm = $_GET['codinm'];
@@ -22,6 +33,9 @@ if (isset($_GET['codinm'])) {
     $db->exec_query("delete from propiedades where id_inmueble='".$codinm."'");
     $db->exec_query("delete from inmueble where id='".$codinm."'");
     $db->exec_query("delete from inmueble_deuda_confidencial where id_inmueble='".$codinm."'");
+    $db->exec_query("delete from cancelacion_gastos where id_inmueble='".$codinm."'");
+    $db->exec_query("delete from fondos_movimiento where id_fondo in (select id from fondos where id_inmueble='".$codinm."')");
+    $db->exec_query("delete from fondos where id_inmueble='".$codinm."'");
     $mensaje = "Actualización inmueble ".$codinm."<br>";
 } else {
     $mensaje = "Proceso de Actualización Ejecutado<br />";
@@ -412,6 +426,40 @@ if (MOVIMIENTO_FONDO == 1) {
     }
     
 }// </editor-fold>
+
+$archivo = ACTUALIZ . "CANCELACION_GASTOS.txt";
+if (file_exists($archivo)) {
+
+    $contenidoFichero = JFile::read($archivo);
+    $lineas = explode("\r\n", $contenidoFichero);
+    echo "procesar archivo cancelacion de gastos (".count($lineas).")<br />";
+    $mensaje.="procesar archivo cancelacion de gastos (".count($lineas).")<br />";
+    $pago = new pago();
+    foreach ($lineas as $linea) {
+
+        $registro = explode("\t", $linea);
+
+        if ($registro[0] != "") {
+
+            $registro = [
+                'descripcion'      => utf8_encode($registro[2]),
+                'fecha_movimiento' => $registro[0],
+                'id_apto'          => $registro[4],
+                'id_inmueble'      => $registro[3],
+                'monto'            => $registro[1],
+                'numero_factura'   => str_replace("\r","",$registro[6]),            
+                'periodo'          => $registro[5],
+            ];
+
+            $r = $pago->insertarCancelacionDeGastos($registro);
+
+
+            if ($r["suceed"] == FALSE) {
+                echo($r['stats']['errno'] . "<br />" . $r['stats']['error'] . '<br/>' . $r['query']);
+            }
+        }
+    }
+}
 
 $fecha = JFILE::read(ACTUALIZ."ACTUALIZACION.txt");
 echo "****FIN DEL PROCESO DE ACTUALIZACION****<br />";
