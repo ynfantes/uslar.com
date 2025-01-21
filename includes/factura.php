@@ -88,6 +88,40 @@ class factura extends db implements crud {
         $result = db::query($sql);
         return $result;
     }
-}
 
-?>
+    public function listarFacturasConNumFact() {
+        
+        $sql = 'SELECT numero_factura, id_inmueble, apto  
+            FROM facturas 
+            WHERE numero_factura is not null and numero_factura <> ""
+            ORDER BY id_inmueble, apto, periodo';
+
+        return db::query($sql);
+    }
+
+    public function insertarActualizar($data){
+        $update = $data;
+        unset($update['id_inmueble'],$update['apto'],$update['periodo']);
+        return db::insertUpdate(self::tabla, $data,$update);
+    }
+
+    public function borrarFactura($data) {
+        return db::delete(self::tabla,$data);
+    }
+
+    public function listarDiferenciasRecibosPendientesPorPropietario() {
+        
+        $sql = "select p.codinm, p.apto, p.recibos, f.f_recibos as meses_pendiente , p.clave
+            from propietarios p 
+            inner join (
+                SELECT COUNT(apto) as f_recibos, id_inmueble, apto 
+                FROM `facturas` 
+                GROUP BY id_inmueble, apto
+            ) f on p.codinm=f.id_inmueble 
+            and p.apto = f.apto 
+            where p.recibos <> f.f_recibos
+            order by p.codinm, p.apto";
+        
+        return db::query($sql);
+    }
+}

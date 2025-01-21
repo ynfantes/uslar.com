@@ -55,6 +55,7 @@ class propiedades extends db implements crud {
         return db::query("SELECT id_inmueble FROM propiedades WHERE cedula =".$cedula. " order by id_inmueble");
     }
     
+    public function insertarActualizar($data){
+        return db::insertUpdate(self::tabla, $data,$data);
+    }
 }
-
-?>

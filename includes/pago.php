@@ -352,4 +352,27 @@ class pago extends db implements crud {
                 Array("fecha_movimiento"=>"DESC","STR_TO_DATE(CONCAT('01-', periodo), '%d-%m-%Y')"=>"DESC"));
         return $r;
     }
+
+    public function insertarActualizarCancelacionDeGastos($data) {
+        return db::insertUpdate("cancelacion_gastos",$data,$data);
+    }
+
+    public function listarPropietariosCuotaExcedida($cuota) {
+
+        $sql = "select id_inmueble,id_apto,count(*) as regs 
+            from cancelacion_gastos 
+            group by id_inmueble,id_apto 
+            having count(*) > $cuota
+            order by count(*) DESC";
+        
+        return db::query($sql);
+
+    }
+    public function eliminarCancelacionDeGastos($id) {
+        return db::delete('cancelacion_gastos',['id'=>$id]);
+    }
+
+    public function listarCancelacionDeGastosConNumeroFatura() {
+        return db::query('select * from cancelacion_gastos where numero_factura <> ""');
+    }
 }

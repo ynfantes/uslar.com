@@ -269,5 +269,8 @@ class propietario extends db implements crud  {
             }
         }
     }
+
+    public function insertarActualizar($data){
+        return db::insertUpdate(self::tabla, $data,$data);
     }
-?>
+}

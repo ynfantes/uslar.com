@@ -59,4 +59,7 @@ class fondo extends db implements crud {
                 $id_inmueble."' and f.codigo_gasto='".$codigo_gasto."' order by m.fecha, m.debe, m.concepto";
         return db::query($consulta);
     }
+    public function borrarMovimientosPorIdFondo($id) {
+        return db::exec_query("delete from fondos_movimiento where id_fondo=$id");
+    }
 }

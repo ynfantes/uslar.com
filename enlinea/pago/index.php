@@ -15,10 +15,10 @@ switch ($accion) {
     case "cancelacion":
         $titulo = $_GET['id'] . ".pdf";
         $content = 'Content-type: application/pdf';
-        $url = ROOT."cancelacion.gastos/" . $_GET['id'] . ".pdf";
+        $url = ROOT."/cancelacion.gastos/" . $_GET['id'] . ".pdf";
         header('Content-Disposition: attachment; filename="' . $titulo . '"');
         header($content);
-        readfile($url,false);
+        readfile($url);
         break;
     case "listarRecibosCancelados":
         $propiedad = new propiedades();

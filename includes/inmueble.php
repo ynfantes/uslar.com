@@ -83,4 +83,44 @@ class inmueble extends db implements crud {
         return db::query($consulta);
         
     }
+    public function insertarActualizar($data) {
+        $act = $data;
+        unset($act['id']);
+        return db::insertUpdate(self::tabla,$data,$act);
+    }
+    
+    public function insertarActualizarEstadoDeCuentaInmueble($data) {
+        $act = $data;
+        unset($act['id_inmueble'],$act['apto']);
+        return db::insertUpdate("inmueble_deuda_confidencial", $data,$act);
+    }
+
+    public function listarBancosActivos(){
+        return db::select("*","bancos",["inactivo"=>0],[],['nombre' => 'ASC']);
+    }
+
+    public function obtenerCuentasBancariasPorInmueble($inmueble) {
+        return db::select("*","inmueble_cuenta",["id_inmueble" => "'$inmueble'"]);
+    }
+
+    public function borrarCuentaBancaria($inmueble,$num_cuenta) {
+        return db::delete('inmueble_cuenta',['id_inmueble'=>$inmueble, 'numero_cuenta'=>$num_cuenta]);
+    }
+
+    public function agregarCuentaInmueble($data) {
+        return db::insertUpdate("inmueble_cuenta", $data, $data);
+    }
+
+    public function insertarGrupo($data) {
+        return db::insertUpdate("grupo", $data,['descripcion'=>$data['descripcion']]);
+    }
+
+    public function borrarGrupo($condicion) {
+        db::delete('grupo_propietario',$condicion);
+        return db::delete('grupo',$condicion);
+    }
+    
+    public function insertarGrupoPropietario($data) {
+        return db::insert("grupo_propietario", $data,"IGNORE");
+    }
 }
